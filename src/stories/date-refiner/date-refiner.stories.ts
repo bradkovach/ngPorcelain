@@ -1,10 +1,13 @@
+import { IMyDayLabels } from 'mydatepicker';
+import { defaultDateOptions } from './../../../projects/ng-porcelain/src/lib/date-refiner/date-refiner/date-refiner.component';
 import { action } from '@storybook/addon-actions';
 import { withKnobs } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/angular';
 
 // Utilities
-import * as moment from 'moment';
+import * as _moment from 'moment';
+const moment = _moment;
 
 import {
 	IDateRefinerProps,
@@ -12,6 +15,7 @@ import {
 } from 'projects/ng-porcelain/src/lib/date-refiner/date-refiner/date-refiner.component';
 import { DATE_REFINER_IMPORTS } from 'projects/ng-porcelain/src/lib/date-refiner/date-refiner.module';
 import { DateRefiner, DateOption } from 'projects/ng-porcelain/src/lib/shared/types';
+import { i18nDateOptions } from 'projects/ng-porcelain/src/lib/shared/utilities';
 
 // Porcelain
 
@@ -31,8 +35,89 @@ storiesOf('Date Refiner Component', module)
 				refiner: new DateRefiner({
 					slug: 'myRefinerDefinition',
 					title: 'Simple Date Refiner',
-					options: null // use the default options
-					//type: 'date',
+					options: defaultDateOptions
+				}),
+				onRefinerChange: action('Date Refiner (simple) changed')
+			} as IDateRefinerProps,
+			moduleMetadata: {
+				imports: DATE_REFINER_IMPORTS
+			}
+		}),
+		{
+			notes: { markdown: require('./simpleRefinerDefinition.md') },
+			info: {
+				header: true,
+				inline: true
+			}
+		}
+	)
+	.add(
+		'Custom Translation',
+		() => ({
+			component: DateRefinerComponent,
+			props: {
+				datePickerOptions: {
+					dateFormat: 'yyyy-mm-dd',
+					dayLabels: {
+						su: 'do',
+						mo: 'lu',
+						tu: 'ma',
+						we: 'mi',
+						th: 'ju',
+						fr: 'vi',
+						sa: 'sab'
+					},
+					monthLabels: {
+						1: 'ene',
+						2: 'feb',
+						3: 'mar',
+						4: 'abr',
+						5: 'may',
+						6: 'jun',
+						7: 'jul',
+						8: 'ago',
+						9: 'sep',
+						10: 'oct',
+						11: 'nov',
+						12: 'dic'
+					},
+					todayBtnTxt: 'Hoy'
+				},
+				refiner: new DateRefiner({
+					slug: 'myRefinerDefinition',
+					title: 'Simple Date Refiner',
+					options: i18nDateOptions(
+						'Ver todo',
+						'Hoy',
+						'Últimos 7 días',
+						'Últimos 30 días',
+						'Últimos 90 días',
+						'Fecha Rango'
+					)
+				}),
+				onRefinerChange: action('Date Refiner (translated) changed')
+			} as IDateRefinerProps,
+			moduleMetadata: {
+				imports: DATE_REFINER_IMPORTS
+			}
+		}),
+		{
+			notes: { markdown: require('./simpleRefinerDefinition.md') },
+			info: {
+				header: true,
+				inline: true
+			}
+		}
+	)
+	.add(
+		'Custom Labels',
+		() => ({
+			component: DateRefinerComponent,
+			props: {
+				refiner: new DateRefiner({
+					slug: 'myRefinerDefinition',
+					title: 'Simple Date Refiner',
+					options: defaultDateOptions
 				}),
 				onRefinerChange: action('Date Refiner (simple) changed')
 			} as IDateRefinerProps,
@@ -83,13 +168,15 @@ storiesOf('Date Refiner Component', module)
 							badge: 9999,
 							label: 'Today',
 							getFrom: () =>
-								moment()
+								moment
+									.call(null)
 									.set('seconds', 0)
 									.set('minutes', 0)
 									.set('hour', 0)
 									.toDate(),
 							getTo: () =>
-								moment()
+								moment
+									.call(null)
 									.set('seconds', 0)
 									.set('minutes', 0)
 									.set('hour', 0)
@@ -102,14 +189,16 @@ storiesOf('Date Refiner Component', module)
 							slug: 'pastSevenDays',
 							label: 'Past 7 days',
 							getFrom: () =>
-								moment()
+								moment
+									.call(null)
 									.set('seconds', 0)
 									.set('minutes', 0)
 									.set('hour', 0)
 									.subtract(7, 'days')
 									.toDate(),
 							getTo: () =>
-								moment()
+								moment
+									.call(null)
 									.set('seconds', 0)
 									.set('minutes', 0)
 									.set('hour', 0)
